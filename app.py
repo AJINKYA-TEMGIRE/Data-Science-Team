@@ -58,6 +58,25 @@ file_manager_agent = Agent(
     tools=[FileTools(base_dir=base_dir)]
 )
 
+data_understanding_agent = Agent(
+    id="data-understanding-agent",
+    name="Data Understanding Agent",
+    model=llm,
+    role="Data understanding and Exploration assistant",
+    db=db,
+    add_history_to_context=True,
+    num_history_runs=3,
+    read_chat_history=True,
+    instructions=["You are an expert in handling pandas operations on a df",
+                  "you can create df and also perform operations on it",
+                  "the operations you perform on a df are head(), tail(), info(), describe() for numerical columns and you can also calculate the value_counts() for categorical columns",
+                  "make sure to list down the numerical and categorical columns in the df",
+                  "you can also check the shape of the df using the .shape attribute",
+                  "you also have access to tools which can search for data files"
+                  ],
+    tools=[PandasTools(), FileTools(base_dir=base_dir)],
+)
+
 
 if __name__ == "__main__":
     data_loader_agent.cli_app()
