@@ -16,7 +16,7 @@ from pathlib import Path
 
 load_dotenv()
 
-llm = Groq(id = "llama-3.1-8b-instant")
+llm = Groq(id = "openai/gpt-oss-120b")
 
 base_dir = Path(__file__).parent
 
@@ -45,6 +45,19 @@ data_loader_agent = Agent(
     ],
     tools=[CsvTools(csvs=[data_path] , row_limit = 30 , enable_query_csv_file = False)],
 )
+
+file_manager_agent = Agent(
+    id="file-manager-agent",
+    name="File Manager Agent",
+    model=llm,
+    role="Manages Filesystem",
+    instructions=["You are an expert File Management Agent",
+                  "Your task is to list down files when asked to do it",
+                  "you can also read and write files",
+                  "make sure to never read csv files, you can only list them"],
+    tools=[FileTools(base_dir=base_dir)]
+)
+
 
 if __name__ == "__main__":
     data_loader_agent.cli_app()
