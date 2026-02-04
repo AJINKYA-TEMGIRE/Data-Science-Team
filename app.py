@@ -85,7 +85,7 @@ visualization_agent = Agent(
     db=db,
     add_history_to_context=True,
     num_history_runs=3,
-    tools=[PandasTools(), FileTools(base_dir=base_dir), VisualizationTools("plots")],
+    tools=[PythonTools(base_dir=base_dir), FileTools(base_dir=base_dir), VisualizationTools("plots")],
     instructions=["You are an expert in creating plots using matplotlib",
                   "you have access to the files tool to list down the data files in the project folder",
                   "you also have access to pandas tools that can run pandas specific code that will be used as an input to create charts",
