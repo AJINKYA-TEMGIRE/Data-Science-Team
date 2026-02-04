@@ -77,6 +77,24 @@ data_understanding_agent = Agent(
     tools=[PandasTools(), FileTools(base_dir=base_dir)],
 )
 
+visualization_agent = Agent(
+    id="viz-agent",
+    name="Visualization Agent",
+    model=llm,
+    role="Plotting and Visualization Assistant",
+    db=db,
+    add_history_to_context=True,
+    num_history_runs=3,
+    tools=[PandasTools(), FileTools(base_dir=base_dir), VisualizationTools("plots")],
+    instructions=["You are an expert in creating plots using matplotlib",
+                  "you have access to the files tool to list down the data files in the project folder",
+                  "you also have access to pandas tools that can run pandas specific code that will be used as an input to create charts",
+                  "you can create charts like bar plots, pie charts, line plotsm, histograms and scatter plots",
+                  "use bar plots and histograms to plot univariate charts on categorical and numerical columns respectively",
+                  "when studying the relationship between two numerical columns, you can use a scatter plot",
+                  "always make sure to input the correct data for the respective chart type"]
+)
+
 
 if __name__ == "__main__":
-    data_loader_agent.cli_app()
+    visualization_agent.cli_app()
