@@ -95,6 +95,78 @@ visualization_agent = Agent(
                   "always make sure to input the correct data for the respective chart type"]
 )
 
+coding_agent = Agent(
+    id="coding-agent",
+    name="Coding Agent",
+    db=db,
+    add_history_to_context=True,
+    role="Python Coding Assistant",
+    num_history_runs=5,
+    read_chat_history=True,
+    model=llm,
+    tools=[DuckDuckGoTools(), PythonTools(base_dir=base_dir), ShellTools(base_dir=base_dir)],
+    instructions=["you are an expert coding agent proficient in writing python code",
+                  "your main task is to write code specific to Machine Learning",
+                  "you may be using numpy pandas sklearn scipy etc. in your code",
+                  "you have access to tool that can list files in the directory and can also read them",
+                  "the python tool also lets you create python files and write them, you can also run them to get the desired output",
+                  "you will be used to write python code for ML and Data Science specific tasks such as data cleaning, feature engineering, model training and model evaluation",
+                  "you also have web search capability in case you need to access the latest documentation from the web",
+                  "make sure to get the code reviewed by the user and only write it into a file when the user accepts it",
+                  "if you want to add packages use the shell tool and use the command `uv add <package_name>`",
+                  "do not use the shell tool to execute any other command than the one mentioned above"]
+)
+
+
+shell_agent = Agent(
+    id="shell-agent",
+    name="Shell Agent",
+    model=llm,
+    db=db,
+    add_history_to_context=True,
+    tools=[ShellTools(base_dir=base_dir)],
+    role="Shell Commands Executor",
+    instructions=["You have the capability to run shell commands",
+                  "use this capability with extreme caution",
+                  "only use the shell tool capability if unable to execute the python file",
+                  "use the command `uv run <python_file.py>`",
+                  "do not use the shell tool for commands that can make changes in the project structure",
+                  "do not delete any file",
+                  "just use it to read the project structure, files or to run files"]
+)
+
+data_science_team = Team(
+    members=[data_loader_agent,
+             file_manager_agent,
+             data_understanding_agent,
+             visualization_agent,
+             coding_agent,
+             shell_agent],
+    id="data-science-team",
+    name="Data Science Team",
+    role="Team Leader / Project Manager",
+    model=llm,
+    instructions=["You are an expert Data Scientist and a team leader",
+                  "you manage team members which are good at coding, using pandas, generate visualizations, using matplotlib, executing shell commands, loading data files and also managaing the project filesystem",
+                  "delegate tasks to your members according to their roles and capabilities",
+                  "your task is to assist the user through a machine learning pipeline having steps such as data loading, data understanding, data cleaning, plotting of charts, feature engineering, model training and model evaluation",
+                  "whenever you generate code, first get it reviewed by the user before saving and executing it",
+                  "try to assist the user at all times and provide steps for each  stage so that the user knows what to do",
+                  "you have access to a session state where you can add session wise memory",
+                  "always try to add important stuff such as data path, path to models and path to src files",
+                  "whenever the user asks you to remember anything, just add it to the session state so that it can be retrieved later",
+                  "always try to assist the user with ideas and always think like a professional data scientist",
+                  "if you get any errors try to have an approach to debug and solve issues"],
+    db=db,
+    add_history_to_context=True,
+    num_history_runs=5,
+    read_chat_history=True,
+    session_state={},
+    add_session_state_to_context=True,
+    add_member_tools_to_context=True,
+    enable_agentic_state=True
+)
+
 
 if __name__ == "__main__":
-    visualization_agent.cli_app()
+    data_science_team.cli_app()
