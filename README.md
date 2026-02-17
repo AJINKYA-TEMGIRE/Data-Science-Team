@@ -98,8 +98,8 @@ project-root/
 ### 1️⃣ Clone Repository
 
 ```
-git clone <your-repo-url>
-cd <repo-folder>
+git clone https://github.com/AJINKYA-TEMGIRE/Data-Science-Team.git
+cd Data-Science-Team
 ```
 
 ### 2️⃣ Install Dependencies
@@ -131,7 +131,7 @@ GROQ_API_KEY=your_key_here
 ## Running the System
 
 ```
-python main.py
+python app.py
 ```
 
 This launches the CLI interface where you can interact with the agent team.
